@@ -58,7 +58,7 @@ fn is_white_space(char : Char) -> Bool {
 /// 
 /// # Returns
 /// 
-/// - An iterator of JSON tokens (`Iter[@token.T]`).
+/// - An iterator of JSON tokens (`Iter[T]`).
 /// 
 /// # Examples
 /// 
@@ -78,7 +78,7 @@ fn is_white_space(char : Char) -> Bool {
 ///   )
 /// }
 /// ```
-pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
+pub fn parse(string : Iter[Char]) -> Iter[T] {
   Iter::new(
     fn(f) {
       let true_str = ['t', 'r', 'u', 'e']
@@ -86,8 +86,6 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
       let null_str = ['n', 'u', 'l', 'l']
       let stack = @deque.from_array([ExpectValue])
       for char in string {
-        println(stack)
-        println(char)
         try {
           loop stack.back() {
             None => raise Err(())
@@ -107,7 +105,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                 }
                 '[' => {
                   stack.pop_back_exn()
-                  match f(@token.ArrayStart) {
+                  match f(ArrayStart) {
                     IterEnd => raise Err(())
                     _ => ()
                   }
@@ -115,7 +113,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                 }
                 '{' => {
                   stack.pop_back_exn()
-                  match f(@token.ObjectStart) {
+                  match f(ObjectStart) {
                     IterEnd => raise Err(())
                     _ => ()
                   }
@@ -162,7 +160,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                   if char == '\\' {
                     expect.state = ExpectEscapedChar
                   } else if char == '"' {
-                    match f(@token.String(buffer.to_string())) {
+                    match f(String(buffer.to_string())) {
                       IterEnd => raise Err(())
                       IterContinue => stack.pop_back_exn()
                     }
@@ -229,7 +227,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
               match state {
                 ExpectEndOrValue =>
                   if char == ']' {
-                    match f(@token.ArrayEnd) {
+                    match f(ArrayEnd) {
                       IterEnd => raise Err(())
                       _ => stack.pop_back_exn()
                     }
@@ -240,7 +238,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                   }
                 ExpectEndOrNext =>
                   if char == ']' {
-                    match f(@token.ArrayEnd) {
+                    match f(ArrayEnd) {
                       IterEnd => raise Err(())
                       _ => stack.pop_back_exn()
                     }
@@ -254,7 +252,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
               match state {
                 ExpectEndOrFieldName =>
                   if char == '}' {
-                    match f(@token.ObjectEnd) {
+                    match f(ObjectEnd) {
                       IterEnd => raise Err(())
                       _ => stack.pop_back_exn()
                     }
@@ -268,7 +266,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                   }
                 ExpectEndOrNext =>
                   if char == '}' {
-                    match f(@token.ObjectEnd) {
+                    match f(ObjectEnd) {
                       IterEnd => raise Err(())
                       _ => stack.pop_back_exn()
                     }
@@ -298,7 +296,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
               if expectation[0] == char {
                 expect.expectation = expectation[1:]
                 if expect.expectation.length() == 0 {
-                  match f(@token.True) {
+                  match f(True) {
                     IterEnd => raise Err(())
                     _ => stack.pop_back_exn()
                   }
@@ -310,7 +308,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
               if expectation[0] == char {
                 expect.expectation = expectation[1:]
                 if expect.expectation.length() == 0 {
-                  match f(@token.False) {
+                  match f(False) {
                     IterEnd => raise Err(())
                     _ => stack.pop_back_exn()
                   }
@@ -322,7 +320,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
               if expectation[0] == char {
                 expect.expectation = expectation[1:]
                 if expect.expectation.length() == 0 {
-                  match f(@token.Null) {
+                  match f(Null) {
                     IterEnd => raise Err(())
                     _ => stack.pop_back_exn()
                   }
@@ -356,7 +354,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                     } catch {
                       _ => raise Err(())
                     }
-                    match f(@token.Number(number)) {
+                    match f(Number(number)) {
                       IterEnd => raise Err(())
                       _ => {
                         stack.pop_back_exn()
@@ -376,7 +374,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                     } catch {
                       _ => raise Err(())
                     }
-                    match f(@token.Number(number)) {
+                    match f(Number(number)) {
                       IterEnd => raise Err(())
                       _ => {
                         stack.pop_back_exn()
@@ -403,7 +401,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                     } catch {
                       _ => raise Err(())
                     }
-                    match f(@token.Number(number)) {
+                    match f(Number(number)) {
                       IterEnd => raise Err(())
                       _ => {
                         stack.pop_back_exn()
@@ -438,7 +436,7 @@ pub fn parse(string : Iter[Char]) -> Iter[@token.T] {
                     } catch {
                       _ => raise Err(())
                     }
-                    match f(@token.Number(number)) {
+                    match f(Number(number)) {
                       IterEnd => raise Err(())
                       _ => {
                         stack.pop_back_exn()
