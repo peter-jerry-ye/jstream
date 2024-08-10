@@ -1,1 +1,3 @@
-# username/hello
+# JStream
+
+A stream parser for JSON
