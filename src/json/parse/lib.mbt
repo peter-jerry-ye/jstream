@@ -1,3 +1,6 @@
+// Copyright 2024 peter-jerry-ye
+// SPDX-License-Identifier: MIT
+
 priv enum State {
   ExpectValue
   ExpectString(mut ~state : ParseString, ~buffer : Buffer)

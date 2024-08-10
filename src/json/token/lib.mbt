@@ -1,3 +1,6 @@
+// Copyright 2024 peter-jerry-ye
+// SPDX-License-Identifier: MIT
+
 pub enum T {
   ObjectStart
   ObjectEnd

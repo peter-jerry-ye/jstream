@@ -1,3 +1,6 @@
+// Copyright 2024 peter-jerry-ye
+// SPDX-License-Identifier: MIT
+
 test "utf8" {
   @decoder.utf8([b'a', b'b', b'c']).collect()
   |> inspect!(content="['a', 'b', 'c']")
