@@ -164,7 +164,7 @@ pub fn parse(string : Iter[Char]) -> Iter[T] {
                       IterEnd => raise Err(())
                       IterContinue => stack.pop_back_exn()
                     }
-                  } else if char < '\x32' {
+                  } else if char < '\x20' {
                     raise Err(())
                   } else {
                     buffer.write_char(char)
@@ -467,6 +467,17 @@ test "parse" {
   |> inspect!(
     content=
       #|[ObjectStart, String("a"), String("hello"), String("x"), ArrayStart, ObjectStart, String("b"), True, ObjectEnd, Null, Number(1.5), False, Number(-2.7e9), ArrayEnd, ObjectEnd]
+    ,
+  )
+  #|{
+  #|  "a":"0"
+  #|}
+  .iter()
+  |> parse
+  |> collect
+  |> inspect!(
+    content=
+      #|[ObjectStart, String("a"), String("0"), ObjectEnd]
     ,
   )
 }
